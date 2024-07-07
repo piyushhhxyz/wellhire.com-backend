@@ -16,10 +16,6 @@
     {
       "src": "readme.md",
       "use": "@vercel/static"
-    },
-    {
-      "src": ".env",
-      "use": "@vercel/env"
     }
   ],
   "routes": [
