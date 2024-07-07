@@ -14,9 +14,10 @@ OnlineAssessment.belongsTo(Company);
 College.hasMany(OnlineAssessment);
 OnlineAssessment.belongsTo(College);
 
-User.hasMany(OnlineAssessment);
-OnlineAssessment.belongsTo(User, { as: 'uploader' });
-
+// User.hasMany(OnlineAssessment);
+// OnlineAssessment.belongsTo(User, { as: 'uploader' });
+User.hasMany(OnlineAssessment, { as: 'UploadedAssessments', foreignKey: 'UploaderId' });
+OnlineAssessment.belongsTo(User, { as: 'Uploader', foreignKey: 'UploaderId' });
 module.exports = {
   User,
   Company,

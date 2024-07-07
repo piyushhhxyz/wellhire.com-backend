@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../config/database'); // Updated path
+const sequelize = require('../../config/database');
 
 const OnlineAssessment = sequelize.define('OnlineAssessment', {
   id: {
@@ -14,6 +14,18 @@ const OnlineAssessment = sequelize.define('OnlineAssessment', {
   year: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  CompanyId: {
+    type: DataTypes.UUID,
+    allowNull: true
+  },
+  CollegeId: {
+    type: DataTypes.UUID,
+    allowNull: true
+  },
+  UploaderId: {
+    type: DataTypes.UUID,
+    allowNull: true
   },
   metadata: {
     type: DataTypes.JSONB,

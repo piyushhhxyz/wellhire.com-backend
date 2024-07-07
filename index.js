@@ -4,8 +4,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const sequelize = require('./database/db'); // Correct import
-const authRoutes = require('./core-services/auth/routes');
+const sequelize = require('./database/db');
+const routes = require('./routes');
 const errorHandler = require('./utils/errorHandler');
 
 const app = express();
@@ -24,10 +24,8 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Routes
-app.use('/api/auth', authRoutes);
 
-// Serve uploaded files
+app.use('/api', routes);
 app.use('/uploads', express.static('uploads'));
 app.use(errorHandler);
 
@@ -37,9 +35,9 @@ app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   try {
     await sequelize.authenticate();
-    console.log('Database Connected.');
+    console.log('postgresql@14 connected.');
   } catch (error) {
-    console.error('Database Connection Failed.', error);
+    console.error('postgresql@14 Connection Failed.', error);
   }
 });
 
