@@ -1,39 +1,9 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api.curls.md",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "database/models/User.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "models/index.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "readme.md",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api.curls.md"
-    },
-    {
-      "src": "/models/(.*)",
-      "dest": "/models/index.js"
-    },
-    {
-      "src": "/database/models/(.*)",
-      "dest": "/database/models/User.js"
-    },
-    {
-      "src": "/readme",
-      "dest": "/readme.md"
-    }
-  ]
+    "version": 2,
+    "builds": [
+      { "src": "*.js", "use": "@vercel/node" }
+    ],
+    "routes": [
+        { "src": "/(.*)", "dest": "/" }
+    ]
 }

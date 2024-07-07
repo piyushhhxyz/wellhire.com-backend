@@ -39,5 +39,9 @@ app.listen(PORT, async () => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.status(200).send("Server is working");
+});
+
 module.exports = app;
 
