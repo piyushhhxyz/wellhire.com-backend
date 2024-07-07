@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { OnlineAssessment, Company, College } = require('../models');
+const { OnlineAssessment, Company, College } = require('../../database/models'); // Updated path
 const multer = require('multer');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');

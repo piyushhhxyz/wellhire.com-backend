@@ -4,9 +4,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const { sequelize } = require('./models');
-const authRoutes = require('./routes/auth');
-const onlineAssessmentsRoutes = require('./routes/onlineAssessments');
+const sequelize = require('./database/db'); // Correct import
+const authRoutes = require('./core-services/auth/routes');
 const errorHandler = require('./utils/errorHandler');
 
 const app = express();
@@ -27,23 +26,20 @@ app.use(limiter);
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/online-assessments', onlineAssessmentsRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static('uploads'));
-
-// Error handling middleware
 app.use(errorHandler);
 
-// Start server
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   try {
     await sequelize.authenticate();
-    console.log('Database connection has been established successfully.');
+    console.log('Database Connected.');
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('Database Connection Failed.', error);
   }
 });
 

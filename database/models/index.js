@@ -1,8 +1,8 @@
 const User = require('./User');
 const Company = require('./Company');
 const College = require('./College');
-const OnlineAssessment = require('./OnlineAssessment');
 const Subscription = require('./Subscription');
+const OnlineAssessment = require('./OnlineAssessment.js');
 
 // Define relationships
 User.hasOne(Subscription);
