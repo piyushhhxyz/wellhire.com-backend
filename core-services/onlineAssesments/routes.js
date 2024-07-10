@@ -7,24 +7,39 @@ const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const auth = require("../../middleware/auth");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = path.join(__dirname, "../../uploads"); // Updated path
-    fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${uuidv4()}${path.extname(file.originalname)}`);
-  },
-});
-
+const { Upload } = require("@aws-sdk/lib-storage");
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-router.post("/upload", upload.single("pdf"), async (req, res) => {
+//s3 sdk
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+
+const bucketName = process.env.BUCKET_NAME;
+const region = process.env.BUCKET_REGION;
+
+const s3Client = new S3Client({
+  region,
+});
+//
+router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     const { companyName, collegeName, year } = req.body;
     const file = req.file;
+    //create parameters for uploading into S#
+    const params = {
+      Bucket: bucketName,
+      Key: req.file.originalname,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+    };
+    // Upload file to S3
+    const upload = new Upload({
+      client: s3Client,
+      params: params,
+    });
 
+    const data = await upload.done();
+    //
     if (!file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
@@ -38,9 +53,8 @@ router.post("/upload", upload.single("pdf"), async (req, res) => {
     if (!college) {
       college = await College.create({ name: collegeName });
     }
-
-    const pdfUrl = `/uploads/${file.filename}`;
-
+    //generate url
+    const pdfUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${req.file.originalname}`;
     const onlineAssessment = await OnlineAssessment.create({
       pdfUrl,
       year,
