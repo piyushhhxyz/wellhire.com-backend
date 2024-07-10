@@ -7,7 +7,6 @@ const rateLimit = require("express-rate-limit");
 const sequelize = require("./database/db");
 const routes = require("./routes");
 const errorHandler = require("./utils/errorhandler");
-
 const app = express();
 
 // Middleware
@@ -44,4 +43,3 @@ app.get("/", (req, res) => {
 });
 
 module.exports = app;
-
