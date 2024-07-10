@@ -10,6 +10,17 @@ const errorHandler = require("./utils/errorhandler");
 
 const app = express();
 
+//s3 sdk
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+
+const bucketName = process.env.BUCKET_NAME;
+const region = process.env.BUCKET_REGION;
+
+const s3Client = new S3Client({
+  region,
+});
+
+//
 // Middleware
 app.use(cors());
 app.use(helmet());
@@ -43,5 +54,29 @@ app.get("/", (req, res) => {
   res.status(200).send("Server is working");
 });
 
-module.exports = app;
+//testing s3 api
 
+app.post("/s3", async (req, res) => {
+  try {
+    console.log(req.file);
+
+    const params = {
+      Bucket: bucketName,
+      Key: req.file.originalname,
+      Body: req.file.buffer,
+      ContentType: req.file.mimetype,
+    };
+
+    const command = new PutObjectCommand({ params });
+    await s3Client.send(command);
+
+    res.send({ msg: "bucket uploading scuessfull" });
+  } catch (err) {
+    res.send({ msg: "error uploading to bucket" });
+    console.log(err.message);
+  }
+});
+
+//
+
+module.exports = app;

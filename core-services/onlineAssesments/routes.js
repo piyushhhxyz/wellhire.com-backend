@@ -109,7 +109,19 @@ router.get("/:id", auth, async (req, res) => {
       error: error.message,
     });
   }
+
+  router.post("/testing", upload.single("img"), async (req, res) => {
+    try {
+      const file = req.file;
+      if (!file) {
+        res.send("file not given");
+      }
+      res.send(file);
+    } catch (err) {
+      console.log("error occures");
+      res.send("error uploading to bucket");
+    }
+  });
 });
 
 module.exports = router;
-
