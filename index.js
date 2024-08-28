@@ -7,6 +7,7 @@ const rateLimit = require("express-rate-limit");
 const sequelize = require("./database/db");
 const routes = require("./routes");
 const errorHandler = require("./utils/errorhandler");
+const paymentRoutes = require("./core-services/payments/routes");
 const app = express();
 
 // Middleware
@@ -25,6 +26,7 @@ app.use(limiter);
 
 app.use("/api", routes);
 app.use("/uploads", express.static("uploads"));
+app.use("/api/payments", paymentRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
